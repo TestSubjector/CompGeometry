@@ -14,7 +14,7 @@ int Size; /// Global for convenience
 
 void Arrange(pos P[]);
 int Convex(pos Q[]);
-double Dir(pos &A, pos &B, pos &C);
+float Dir(pos &A, pos &B, pos &C);
 
 int main()
 {   
@@ -80,9 +80,9 @@ void Arrange(pos P[])
 int Convex(pos P[])
 {   
     pos List[2*Size];
-    int J=0;
+    int J=2;
 
-    /// Lower Convex Hull
+    /// For Lower C[H]
     List[0] = P[0];
     List[1] = P[1];
 
@@ -94,7 +94,7 @@ int Convex(pos P[])
     
     int flag = J+1; 
     
-    /// Upper Convex Hull
+    /// For Upper C[H]
     for( int K = Size-2; K>=0; K--){
         while(J>=flag && Dir(List[J-2], List[J-1], P[K]) <= 0)
         J--;
@@ -103,11 +103,11 @@ int Convex(pos P[])
        
     for(int L=0;L<J;L++)
     P[L] = List[L];
-    return J; 
+    return J-1; 
 }
 
 /// Cross Product Rotation
-double Dir(pos &A, pos &B, pos &C)
+float Dir(pos &A, pos &B, pos &C)
 {
     return (B.x - A.x)*(C.y - A.y) - (B.y - A.y)*(C.x - A.x);
 }
