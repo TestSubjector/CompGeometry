@@ -6,7 +6,7 @@
  * @param  r The next point
  * @return   0 for same direction, positive value for left turn and negative value for right turn
  */
-float nextDirection(Point p,Point q,Point r)
+double nextDirection(Point p,Point q,Point r)
 {
   // A positive cross product indicates left, while a negative one indicates right.
   return (q.x - p.x)*(r.y - q.y) - (r.x - q.x)*(q.y - p.y);
@@ -44,7 +44,7 @@ int removeThetaCollinear(PolarPoint inp[],int n,PolarPoint out[])
   out[newlen++] = inp[0]; //maintaining origin first
   for(int i = 1; i < n-1 ; i++)
   {
-    if(inp[i].theta == inp[i+1].theta) continue;
+    if(compareTheta(inp[i],inp[i+1])==0) continue;
     else
     {
       out[newlen++] = inp[i];
@@ -92,7 +92,7 @@ void sortPoints(PolarPoint inp[], int n)
 /**
  * Adds the points that are the vertices of the convex hull into the passed stack
  * @param inp  Array of all points in cartesian form; sorted
- * @param len  length of the array
+ * @param n  length of the array
  * @param root pointer to the root node pointer of a stack
  */
 void computeHull(Point inp[],int n,Node **root)
@@ -102,7 +102,7 @@ void computeHull(Point inp[],int n,Node **root)
   push(inp[1],root);
   for(int i = 2; i < n-1; i++ )
   {
-    if(nextDirection( peek(root),inp[i],inp[i+1]) < 0) continue; //This means right turn
+    if(nextDirection( peek(root),inp[i],inp[i+1]) < 0) continue; //This means right turn. If collinear point not to be taken, make <=
     else push(inp[i],root);
   }
   push(inp[n-1],root);
@@ -110,9 +110,9 @@ void computeHull(Point inp[],int n,Node **root)
 
 /**
  * The single function that needs to be called in order to get the vertices of the convex hull using Graham's Scan algo
- * @param inp  [description]
- * @param n    [description]
- * @param root [description]
+ * @param inp  Input array of Points
+ * @param len    length of array
+ * @param root Stack root node to which vertices will be pushed
  */
 void getHull(Point input[],int len,Node **root)
 {
@@ -138,6 +138,12 @@ void getHull(Point input[],int len,Node **root)
   newlen = removeThetaCollinear(input_pol,len,intermediate_pol);
   // printf("%s\n","Printing intermediate polar array");
   // printArray(intermediate_pol,newlen);
+
+  if(newlen < 3)
+  {
+    printf("%s\n", "Convex hull not possible");
+    return;
+  }
 
   Point* intermediate_cart = new Point[newlen];
   for(int i = 0; i < newlen; i++)

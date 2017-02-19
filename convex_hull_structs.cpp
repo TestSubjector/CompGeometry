@@ -10,9 +10,9 @@ PolarPoint convertToPolar(Point p, Point origin)
 {
   p.x -= origin.x;
   p.y -= origin.y;
-  float r = sqrt(p.x*p.x + p.y*p.y);
-  if(r==0) return PolarPoint(0.0,0.0);
-  float theta = atan(p.y/p.x);
+  double r = sqrt(p.x*p.x + p.y*p.y);
+  if(r==0.0 || r==-0.0) return PolarPoint(0.0,0.0);
+  double theta = atan(p.y/p.x);
   return PolarPoint(r,theta);
 }
 
@@ -24,11 +24,39 @@ PolarPoint convertToPolar(Point p, Point origin)
  */
 Point converttoCartesian(PolarPoint p, Point origin)
 {
-  float x = p.r * cos(p.theta);
-  float y = p.r * sin(p.theta);
+  double x = p.r * cos(p.theta);
+  double y = p.r * sin(p.theta);
   x += origin.x;
   y += origin.y;
+
   return Point(x,y);
+}
+
+/**
+ * Compares two PolarPoints based on which has lower theta
+ * @param  p PolarPoint 1
+ * @param  q PolarPoint 2
+ * @return   0 for equal, -1 for p < q, 1 for p > q.
+ */
+int compareTheta(PolarPoint p, PolarPoint q)
+{
+  // abs() returns a rounded value. fabs() is for floats
+  double diff = fabs(p.theta - q.theta);
+  if(  diff < 0.000001)
+  {
+    // Equal theta. Margin to account for floating point error
+    return 0;
+  }
+  else if(p.theta > q.theta)
+  {
+    //greater
+    return 1;
+  }
+  else
+  {
+    //lesser
+    return -1;
+  }
 }
 
 //
@@ -87,7 +115,7 @@ void printStack(Node** root)
 void printArray(PolarPoint p[], int n)
 {
   for (int i = 0; i < n; i++) {
-    printf("%f,%f\n",p[i].r,p[i].theta );
+    std::cout << p[i].r << ',' << p[i].theta << std::endl;
   }
 }
 

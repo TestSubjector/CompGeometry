@@ -8,18 +8,18 @@
 /// Struct that describes a point in polar coordinates
 struct PolarPoint
 {
-  float r;
-  float theta;
-  PolarPoint(float x, float y):r(x),theta(y){}
+  double r;
+  double theta;
+  PolarPoint(double x, double y):r(x),theta(y){}
   PolarPoint(){}
 };
 
 /// Struct that describes a point in cartesian coordinates
 struct Point
 {
-  float x;
-  float y;
-  Point(float x1, float y1) : x(x1), y(y1){}
+  double x;
+  double y;
+  Point(double x1, double y1) : x(x1), y(y1){}
   Point(){}
 };
 
@@ -32,6 +32,7 @@ struct Node
 
 PolarPoint convertToPolar(Point p, Point origin);
 Point converttoCartesian(PolarPoint p, Point origin);
+int compareTheta(PolarPoint p, PolarPoint q);
 
 int isEmpty(Node* root);
 void push(Point p,Node** root);
