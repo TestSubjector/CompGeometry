@@ -12,7 +12,7 @@ struct point
 	}
 };
 /// Function for taking input of set of points from file input.txt
-void inp(int N,point input[])
+int inp(int N,point input[])
 {
 	ifstream myfile;
 	myfile.open("input.txt",ios::in);
@@ -22,7 +22,7 @@ void inp(int N,point input[])
 			if(myfile.eof())
 			{
 				cout<<"Invalid file."<<endl;
-				break;
+				return 0;
 			}
 			else
 			{
@@ -31,8 +31,12 @@ void inp(int N,point input[])
 			}
 		}
 	else
+	{
 		cout<<"File not found."<<endl;
+		return 0;
+	}
 	myfile.close();
+	return 1;
 }
 /** Given 3 points p1, p2 and p3, function checks how p2-p3 is oriented wrt p1-p2
 	Returns 0 in case of no turn
@@ -94,14 +98,22 @@ int hull_compute(point input[],int result[],int N)
 	return j;
 }
 /// Prints the set of points which form the convex hull of the inputted set of points.
-void output(point input[],int result[],int j)
+void output(point input[],int N,int result[],int j)
 {
-	cout<<"Convex Hull"<<endl;
+	ofstream outputFile;
+	outputFile.open("output_jarvis.ch");
+	outputFile << "CH" <<endl;
+	outputFile << N << " " << j;
+	for(int i=0;i < N; i++)
+	{
+		outputFile << input[i].x_coord << " " << input[i].y_coord << " 0.0" << endl;
+	}
 	for(int i=0;i<j-1;i++)
 	{
-		cout<<result[i]<<endl;
-		cout<<endl;
+		outputFile<<result[i]<<" ";
 	}
+	outputFile << endl;
+	outputFile.close();
 }
 int main()
 {
@@ -110,7 +122,7 @@ int main()
 	cin>>N;
 	if(N<3)
 	{
-		cout<<"Atleast 3 points."<<endl; /// Convex hull is not defined for 1 or 2 point(s).
+		cout<<"Atleast 3 points."<<endl; /// Convex hull is not defined for 1 or 2 points.
 		return 0;
 	}
 	point input[N]; /// The array which stores the input points. Does not change after input is taken.
@@ -119,6 +131,6 @@ int main()
 		result[i]=-1;
 	inp(N,input);
 	j=hull_compute(input,result,N); // No. of points on the hull
-	output(input,result,j);
+	output(input,N,result,j);
 	return 0;
 }

@@ -11,6 +11,6 @@ void swapLeftmostPoint(Point p[], int n);
 int removeThetaCollinear(PolarPoint inp[],int n,PolarPoint out[]);
 void sortPoints(PolarPoint inp[], int n);
 void computeHull(Point inp[],int n,Node **root);
-void getHull(Point inp[],int n,Node **root);
+void getHull(Point input[],int n,Node **root);
 
 #endif

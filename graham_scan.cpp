@@ -59,8 +59,9 @@ int removeThetaCollinear(PolarPoint inp[],int n,PolarPoint out[])
  * @details Points are sorted according to increasing angle, then radius.
  * The leftmost point is not passed to the function to ensure that inp[0] is the origin (0.0,0.0).
  * If this is not done, the points below origin (theta < 0) are before it in the array, which is not our desired traversal path.
- * O(n^2) complexity. Might be possible to bring to O(nlogn) by using a QuickSort
+ * O(n^2) complexity. Can be brought to O(nlogn) by using a QuickSort or other appropriate algorithm
  * @param inp Array of points in polar representation
+ * @param n Length of the array
  */
 void sortPoints(PolarPoint inp[], int n)
 {
@@ -110,7 +111,7 @@ void computeHull(Point inp[],int n,Node **root)
 
 /**
  * The single function that needs to be called in order to get the vertices of the convex hull using Graham's Scan algo
- * @param inp  Input array of Points
+ * @param input  Input array of Points
  * @param len    length of array
  * @param root Stack root node to which vertices will be pushed
  */
