@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 /// Used triple slashes for doxygen incorporation 
@@ -6,8 +7,8 @@ using namespace std;
 ///Co-ordinates Storage
 struct pos
 {
-    int x;
-    int y;
+    double x;
+    double y;
 };
 
 int Size; /// Global for convenience 
@@ -15,6 +16,7 @@ int Size; /// Global for convenience
 void Arrange(pos P[]);
 int Convex(pos Q[]);
 float Dir(pos &A, pos &B, pos &C);
+void Input(pos R[]);
 
 int main()
 {   
@@ -25,13 +27,7 @@ int main()
     int F_Size; /// Stores size of Hull 
     
     /// Feeding points
-    for(int I = 0; I < Size; I++)
-    {   
-        cout<<"\nEnter x coordinate of #"<<I+1<<" point - ";
-        cin>>coord[I].x;
-        cout<<"Enter y coordinate of #"<<I+1<<" point - ";
-        cin>>coord[I].y;
-    } 
+    Input(coord);
 
     Arrange(coord);
     
@@ -47,6 +43,34 @@ int main()
     } 
     
     return 0;
+}
+
+void Input(pos R[])
+{
+    int A = 1;
+	ifstream Myfile;
+	Myfile.open("input.txt",ios::in);
+	if(Myfile.is_open())
+		for(int B = 0;B < A; B++)
+		{
+			if(Myfile.eof())
+			{
+				cout<<"Invalid file."<<endl;
+				break;
+			}
+			else if(A==1)
+            {
+                Myfile>>A;
+            }
+            else
+			{   
+				Myfile>>R[B].x;
+				Myfile>>R[B].y;
+			}
+		}
+	else
+		cout<<"File not found."<<endl;
+Myfile.close();
 }
 
 /// Linear Sort
@@ -77,10 +101,11 @@ void Arrange(pos P[])
     }
 }
 
+/// Function to pick out convex hull points
 int Convex(pos P[])
 {   
     pos List[2*Size];
-    int J=2;
+    int J = 2;
 
     /// For Lower C[H]
     List[0] = P[0];
