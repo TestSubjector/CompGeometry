@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 using namespace std;
 
 /// Used triple slashes for doxygen incorporation 
@@ -6,32 +8,27 @@ using namespace std;
 ///Co-ordinates Storage
 struct pos
 {
-    int x;
-    int y;
+    double x;
+    double y;
 };
 
 int Size; /// Global for convenience 
 
+void Size_Input();
 void Arrange(pos P[]);
 int Convex(pos Q[]);
 float Dir(pos &A, pos &B, pos &C);
+void Input_XY(pos R[]);
 
 int main()
 {   
-    cout<<" Enter total number of coordinates\n ";
-    cin>> Size;
+    Size_Input();
 
     pos coord[Size]; /// Array to store coord
     int F_Size; /// Stores size of Hull 
     
     /// Feeding points
-    for(int I = 0; I < Size; I++)
-    {   
-        cout<<"\nEnter x coordinate of #"<<I+1<<" point - ";
-        cin>>coord[I].x;
-        cout<<"Enter y coordinate of #"<<I+1<<" point - ";
-        cin>>coord[I].y;
-    } 
+    Input_XY(coord);
 
     Arrange(coord);
     
@@ -41,12 +38,58 @@ int main()
     for(int I = 0; I < F_Size; I++)
     {   
         cout<<"( ";
-        cout<<coord[I].x;
+        /// Do Display A More Accurate Representation Of The Point
+        std::cout << std::setprecision(15)<<coord[I].x;
         cout<<", ";
-        cout<<coord[I].y<<" )\n";
+        std::cout << std::setprecision(15)<<coord[I].y<<" )\n";
     } 
     
     return 0;
+}
+
+void Size_Input()
+{
+    ifstream Myfile;
+	Myfile.open("input.txt",ios::in);
+    if(Myfile.is_open())
+    {	if(Myfile.eof())
+		{
+			cout<<"Invalid file."<<endl;
+        }
+        else
+            Myfile>>Size;
+    }
+	else
+		cout<<"File not found."<<endl;
+Myfile.close();
+}
+
+void Input_XY(pos R[])
+{
+    ifstream Myfile;
+    Myfile.open("input.txt",ios::in);
+	if(Myfile.is_open())
+	{   if (1)
+            {
+                Myfile>>Size;
+            }
+        for(int B = 0; B <=Size; B++)
+		{
+			if(Myfile.eof())
+			{
+				cout<<"Invalid file."<<endl;
+				break;
+			}
+            else
+			{   
+				Myfile>>R[B].x;
+				Myfile>>R[B].y;
+            }
+    	}
+	}
+	else
+		cout<<"File not found."<<endl;
+    Myfile.close();
 }
 
 /// Linear Sort
@@ -62,7 +105,7 @@ void Arrange(pos P[])
               {
                  temp = P[J+1];
                  P[J+1] = P[J];
-                 P[J] = temp;
+                 P[J] = temp;                
               } 
             else if (P[J].x == P[J+1].x)
             {
@@ -77,10 +120,11 @@ void Arrange(pos P[])
     }
 }
 
+/// Function to pick out convex hull points
 int Convex(pos P[])
 {   
     pos List[2*Size];
-    int J=2;
+    int J = 2;
 
     /// For Lower C[H]
     List[0] = P[0];
@@ -106,7 +150,11 @@ int Convex(pos P[])
     return J-1; 
 }
 
-/// Cross Product Rotation
+/** 
+* Cross Product Rotation
+* A problem that could occur here is that via multiplacation
+* the range of the value may exceed what can be stored by double
+*/
 float Dir(pos &A, pos &B, pos &C)
 {
     return (B.x - A.x)*(C.y - A.y) - (B.y - A.y)*(C.x - A.x);
