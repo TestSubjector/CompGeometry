@@ -13,21 +13,21 @@ struct pos
 
 int Size; /// Global for convenience 
 
+void Size_Input();
 void Arrange(pos P[]);
 int Convex(pos Q[]);
 float Dir(pos &A, pos &B, pos &C);
-void Input(pos R[]);
+void Input_XY(pos R[]);
 
 int main()
 {   
-    cout<<" Enter total number of coordinates\n ";
-    cin>> Size;
+    Size_Input();
 
     pos coord[Size]; /// Array to store coord
     int F_Size; /// Stores size of Hull 
     
     /// Feeding points
-    Input(coord);
+    Input_XY(coord);
 
     Arrange(coord);
     
@@ -45,27 +45,45 @@ int main()
     return 0;
 }
 
-void Input(pos R[])
+void Size_Input()
 {
-    int A = 1;
-	ifstream Myfile;
+    ifstream Myfile;
+	Myfile.open("input.txt",ios::in);
+    if(Myfile.is_open())
+    {	if(Myfile.eof())
+		{
+			cout<<"Invalid file."<<endl;
+        }
+        else
+            Myfile>>Size;
+    }
+	else
+		cout<<"File not found."<<endl;
+Myfile.close();
+}
+
+void Input_XY(pos R[])
+{
+    ifstream Myfile;
 	Myfile.open("input.txt",ios::in);
 	if(Myfile.is_open())
-		for(int B = 0;B < A; B++)
+		for(int B = 0;B <=Size; B++)
 		{
 			if(Myfile.eof())
 			{
 				cout<<"Invalid file."<<endl;
 				break;
 			}
-			else if(A==1)
+            else if (B==0)
             {
-                Myfile>>A;
+                Myfile>>Size;
             }
             else
 			{   
-				Myfile>>R[B].x;
-				Myfile>>R[B].y;
+				Myfile>>R[Size].x;
+				Myfile>>R[Size].y;
+                cout<<R[Size].x<<"\n";
+                cout<<R[Size].y<<"\n";
 			}
 		}
 	else
@@ -112,7 +130,7 @@ int Convex(pos P[])
     List[1] = P[1];
 
     for( int I=2; I< Size; ++I){
-        while(J>=2 && Dir(List[J-2], List[J-1], P[I]) <= 0)
+        while(J>=2 && Dir(List[J-2], List[J-1], P[I]) <= 0.0)
         J--;
         List[J++] = P[I];
     }
@@ -131,8 +149,12 @@ int Convex(pos P[])
     return J-1; 
 }
 
-/// Cross Product Rotation
+/** 
+* Cross Product Rotation
+* A problem that could occur here is that via multiplacation
+* the range of the value may exceed what can be stored by double
+*/
 float Dir(pos &A, pos &B, pos &C)
 {
-    return (B.x - A.x)*(C.y - A.y) - (B.y - A.y)*(C.x - A.x);
+    float (B.x - A.x)*(C.y - A.y) - (B.y - A.y)*(C.x - A.x);
 }
