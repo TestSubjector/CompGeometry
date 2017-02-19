@@ -51,36 +51,8 @@ int main(int argc, char const *argv[]) {
     input[i] = parsePoint(lineinput);
   }
 
-  swapLeftmostPoint(input,len);
-  Point origin = input[0];
-  PolarPoint* input_pol= new PolarPoint[len];
-  for(int i = 0; i < len; i++)
-  {
-      input_pol[i] = convertToPolar(input[i],origin);
-  }
-  // if an array is defined as <type>* <arrayname> = new <type>[len] (Basically using the new operator), then the delete [] <arrayName> method can be safely used
-  // the arrays of form <type> <arrayName>[len] are called statically allocated arrays. Their memory cannot be freed
-
-  sortPoints(input_pol+1,len-1);
-  printf("%s\n","Printing sorted polar array" );
-  printArray(input_pol,len);
-
-  PolarPoint* intermediate_pol = new PolarPoint[len];
-  int newlen=0;
-  newlen = removeThetaCollinear(input_pol,len,intermediate_pol);
-  // printf("%s\n","Printing intermediate polar array");
-  // printArray(intermediate_pol,newlen);
-
-  Point* intermediate_cart = new Point[newlen];
-  for(int i = 0; i < newlen; i++)
-  {
-    intermediate_cart[i] = converttoCartesian(intermediate_pol[i],origin);
-  }
-  delete [] intermediate_pol;
-
   Node* root = NULL;
-  getHull(intermediate_cart,newlen,&root);
-  printf("Initial len: %d, Final len: %d\n", len,newlen );
-  // printStack(&root);
+  getHull(input,len,&root);
+  printStack(&root);
   return 0;
 }
