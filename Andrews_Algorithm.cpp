@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 
 /// Used triple slashes for doxygen incorporation 
@@ -37,9 +38,10 @@ int main()
     for(int I = 0; I < F_Size; I++)
     {   
         cout<<"( ";
-        cout<<coord[I].x;
+        /// Do Display A More Accurate Representation Of The Point
+        std::cout << std::setprecision(15)<<coord[I].x;
         cout<<", ";
-        cout<<coord[I].y<<" )\n";
+        std::cout << std::setprecision(15)<<coord[I].y<<" )\n";
     } 
     
     return 0;
@@ -65,30 +67,29 @@ Myfile.close();
 void Input_XY(pos R[])
 {
     ifstream Myfile;
-	Myfile.open("input.txt",ios::in);
+    Myfile.open("input.txt",ios::in);
 	if(Myfile.is_open())
-		for(int B = 0;B <=Size; B++)
+	{   if (1)
+            {
+                Myfile>>Size;
+            }
+        for(int B = 0; B <=Size; B++)
 		{
 			if(Myfile.eof())
 			{
 				cout<<"Invalid file."<<endl;
 				break;
 			}
-            else if (B==0)
-            {
-                Myfile>>Size;
-            }
             else
 			{   
-				Myfile>>R[Size].x;
-				Myfile>>R[Size].y;
-                cout<<R[Size].x<<"\n";
-                cout<<R[Size].y<<"\n";
-			}
-		}
+				Myfile>>R[B].x;
+				Myfile>>R[B].y;
+            }
+    	}
+	}
 	else
 		cout<<"File not found."<<endl;
-Myfile.close();
+    Myfile.close();
 }
 
 /// Linear Sort
@@ -104,7 +105,7 @@ void Arrange(pos P[])
               {
                  temp = P[J+1];
                  P[J+1] = P[J];
-                 P[J] = temp;
+                 P[J] = temp;                
               } 
             else if (P[J].x == P[J+1].x)
             {
@@ -130,7 +131,7 @@ int Convex(pos P[])
     List[1] = P[1];
 
     for( int I=2; I< Size; ++I){
-        while(J>=2 && Dir(List[J-2], List[J-1], P[I]) <= 0.0)
+        while(J>=2 && Dir(List[J-2], List[J-1], P[I]) <= 0)
         J--;
         List[J++] = P[I];
     }
@@ -156,5 +157,5 @@ int Convex(pos P[])
 */
 float Dir(pos &A, pos &B, pos &C)
 {
-    float (B.x - A.x)*(C.y - A.y) - (B.y - A.y)*(C.x - A.x);
+    return (B.x - A.x)*(C.y - A.y) - (B.y - A.y)*(C.x - A.x);
 }
