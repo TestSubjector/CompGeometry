@@ -6,7 +6,7 @@
  * @param  r The next point
  * @return   0 for same direction, positive value for left turn and negative value for right turn
  */
-int nextDirection(Point p,Point q,Point r)
+float nextDirection(Point p,Point q,Point r)
 {
   // A positive cross product indicates left, while a negative one indicates right.
   return (q.x - p.x)*(r.y - q.y) - (r.x - q.x)*(q.y - p.y);
@@ -95,7 +95,7 @@ void sortPoints(PolarPoint inp[], int n)
  * @param len  length of the array
  * @param root pointer to the root node pointer of a stack
  */
-void getHull(Point inp[],int n,Node **root)
+void computeHull(Point inp[],int n,Node **root)
 {
   //Add the origin and next point to the Hull
   push(inp[0],root);
@@ -106,4 +106,48 @@ void getHull(Point inp[],int n,Node **root)
     else push(inp[i],root);
   }
   push(inp[n-1],root);
+}
+
+/**
+ * The single function that needs to be called in order to get the vertices of the convex hull using Graham's Scan algo
+ * @param inp  [description]
+ * @param n    [description]
+ * @param root [description]
+ */
+void getHull(Point input[],int len,Node **root)
+{
+  swapLeftmostPoint(input,len);
+  Point origin = input[0];
+  PolarPoint* input_pol= new PolarPoint[len];
+  for(int i = 0; i < len; i++)
+  {
+      input_pol[i] = convertToPolar(input[i],origin);
+  }
+  // if an array is defined as <type>* <arrayname> = new <type>[len] (Basically using the new operator), then the delete [] <arrayName> method can be safely used
+  // the arrays of form <type> <arrayName>[len] are called statically allocated arrays. Their memory cannot be freed
+
+  // printf("%s\n","Printing unsorted polar array" );
+  // printArray(input_pol,len);
+
+  sortPoints(input_pol+1,len-1);
+  // printf("%s\n","Printing sorted polar array" );
+  // printArray(input_pol,len);
+
+  PolarPoint* intermediate_pol = new PolarPoint[len];
+  int newlen=0;
+  newlen = removeThetaCollinear(input_pol,len,intermediate_pol);
+  // printf("%s\n","Printing intermediate polar array");
+  // printArray(intermediate_pol,newlen);
+
+  Point* intermediate_cart = new Point[newlen];
+  for(int i = 0; i < newlen; i++)
+  {
+    intermediate_cart[i] = converttoCartesian(intermediate_pol[i],origin);
+  }
+  delete [] intermediate_pol;
+
+  // printf("%s\n","Printing intermediate cart array");
+  // printArray(intermediate_cart,newlen);
+
+  computeHull(intermediate_cart,newlen,root);
 }
