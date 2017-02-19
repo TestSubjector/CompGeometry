@@ -1,49 +1,55 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include "convex_hull_structs.h"
 using namespace std;
 
-/// Used triple slashes for doxygen incorporation 
+/// Using triple slashes for doxygen incorporation 
 
-///Co-ordinates Storage
-struct pos
-{
-    double x;
+struct pos ///< Structure for Co-ordinates Storage
+{   
+    double x; ///< Assigned double to increase robustness
     double y;
 };
 
-int Size; /// Global for convenience 
+int Size; ///< Global for convenience 
 
 void Size_Input();
 void Arrange(pos P[]);
 int Convex(pos Q[]);
 float Dir(pos &A, pos &B, pos &C);
 void Input_XY(pos R[]);
+void Output_CH(pos S[], pos Si[], int Convex_Size);
+void Duplicate(pos T[],pos U[]);
 
 int main()
 {   
     Size_Input();
 
-    pos coord[Size]; /// Array to store coord
-    int F_Size; /// Stores size of Hull 
+    pos coord[Size]; ///< Array to store points
+    pos indice[Size]; ///< Reference array for visualizer indices
+    int F_Size; ///< Stores number of C(H) points 
+       
+    Input_XY(coord); ///< Feeding points
     
-    /// Feeding points
-    Input_XY(coord);
+    Duplicate(indice, coord); ///< Give points to Indice Array
 
-    Arrange(coord);
+    Arrange(coord); ///< Sorting of points with reference to their x and then y coordinate
     
-    F_Size = Convex(coord);
+    F_Size = Convex(coord); 
 
     /// Displaying Convex Hulls
+    Output_CH(coord, indice, F_Size);
+   
     for(int I = 0; I < F_Size; I++)
     {   
         cout<<"( ";
-        /// Do Display A More Accurate Representation Of The Point
+        /// To Display A More Accurate Representation Of The Points
         std::cout << std::setprecision(15)<<coord[I].x;
         cout<<", ";
         std::cout << std::setprecision(15)<<coord[I].y<<" )\n";
-    } 
-    
+    }  
+
     return 0;
 }
 
@@ -71,7 +77,7 @@ void Input_XY(pos R[])
 	if(Myfile.is_open())
 	{   if (1)
             {
-                Myfile>>Size;
+                Myfile>>Size;     
             }
         for(int B = 0; B <=Size; B++)
 		{
@@ -82,7 +88,7 @@ void Input_XY(pos R[])
 			}
             else
 			{   
-				Myfile>>R[B].x;
+				Myfile>>R[B].x;    
 				Myfile>>R[B].y;
             }
     	}
@@ -90,6 +96,15 @@ void Input_XY(pos R[])
 	else
 		cout<<"File not found."<<endl;
     Myfile.close();
+}
+
+void Duplicate(pos T[], pos U[])
+{
+    for (int I=0; I<Size; I++)
+        {
+            T[I].x = U[I].x;
+            T[I].y = U[I].y;
+        }
 }
 
 /// Linear Sort
@@ -152,10 +167,36 @@ int Convex(pos P[])
 
 /** 
 * Cross Product Rotation
-* A problem that could occur here is that via multiplacation
+* A problem that could occur here is that via multiplication
 * the range of the value may exceed what can be stored by double
 */
 float Dir(pos &A, pos &B, pos &C)
 {
     return (B.x - A.x)*(C.y - A.y) - (B.y - A.y)*(C.x - A.x);
+}
+
+/// Function for visualizer requirements 
+void Output_CH(pos S[], pos Si[], int Convex_Size)
+{
+    ofstream Myfile;
+    Myfile.open("Answer.ch", ios::out | ios::trunc);
+    Myfile<<Size<<" "<<Convex_Size<<"\n";
+
+    for(int H=0; H< Size; H++)     ///< Reading Points to file
+    {
+        Myfile<<Si[H].x<<" "<<Si[H].y<<"\n";
+    }    
+
+    for (int I=0; I< Convex_Size; I++)     
+    {
+        for(int J=0; J<Size; J++)
+        {   
+            /// Robustness issues may occure here
+            if(S[I].x==Si[J].x && S[I].y == Si[J].y)  ///< Matching Point with Indice. 
+            {                                           
+                Myfile<<J+1<<" ";
+                break;
+            }
+        }
+    }
 }
