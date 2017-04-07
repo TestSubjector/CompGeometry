@@ -191,7 +191,7 @@ void Output_CH(pos S[], pos Si[], int Convex_Size)
     {
         for(int J=0; J<Size; J++)
         {   
-            /// Robustness issues may occure here
+            /// Robustness issues may occur here
             if(S[I].x==Si[J].x && S[I].y == Si[J].y)  ///< Matching Point with Indice. 
             {                                           
                 Myfile<<J+1<<" ";
