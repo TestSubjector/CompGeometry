@@ -1,10 +1,7 @@
-#include<stdio.h>
 #include<stdlib.h>
-#include<iostream>
-#include<fstream>
 #include<iomanip>
-#include "graham_scan.h"
-using namespace std;
+
+#include "polytriag.h"
 
 // This assumes only one delimiter per string
 Point parsePoint(string inp, char delim = ' ')
@@ -27,36 +24,48 @@ int main(int argc, char const *argv[]) {
   ofstream outputFile;
   string filePath;
   cout << "Enter input file path: ";
-  cin >> filePath;
+  getline(cin, filePath);
   inputFile.open(filePath.c_str(),ios::in);
   string lineinput;
   int len = 0;
+
   if(inputFile.is_open())
   {
       getline(inputFile,lineinput);
       len = atoi(lineinput.c_str());
   }
-  Point* input = new Point[len];
+
+  Poly inp = Poly();
+  inp.Init(len);
+
   for(int i = 0; i < len; i++)
   {
     getline(inputFile,lineinput);
-    input[i] = parsePoint(lineinput);
+    inp[i] = parsePoint(lineinput);
   }
   inputFile.close();
 
-  Node* root = NULL;
-  getHull(input,len,&root);
+  outputFile.open("output_triangulate.txt");
 
-  outputFile.open("output_graham.txt");
-  outputFile << setprecision(5);
-  while(!isEmpty(root))
-  {
-    Point temp = pop(&root);
-    if(temp.x < 0.000001) temp.x = 0;
-    if(temp.y < 0.000001) temp.y = 0;
-    outputFile << temp.x << " " << temp.y << endl;
+  list<Poly> list_inp;
+  list_inp.push_back(inp);
+
+  list<Poly> list_out;
+
+  int success = Partition().Triangulate_MONO(&list_inp, &list_out);
+
+  if (success != 1) {
+      cout << "Error: Unable to process" << endl;
+  }
+  else {
+      int num_output = list_out.size();
+      outputFile << "Number of triangles: " << num_output << endl;
+      int i = 1;
+      for (std::list<Poly>::iterator iter = list_out.begin(); iter != list_out.end(); iter++) {
+          outputFile << "Triangle " << i++ << endl;
+          (*iter).printVert(outputFile);
+      }
+      cout << "Output at ./output_triangulate.txt";
   }
   outputFile.close();
-  cout << "Output at ./output_graham.txt";
-  return 0;
 }
