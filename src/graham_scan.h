@@ -7,10 +7,10 @@
 #include "convex_hull_structs.h"
 
 double nextDirection(Point p,Point q,Point r);
-void swapLeftmostPoint(Point p[], int n);
+int getLeftmostPoint(Point p[], int n);
 int removeThetaCollinear(PolarPoint inp[],int n,PolarPoint out[]);
 void sortPoints(PolarPoint inp[], int n);
-void computeHull(Point inp[],int n,Node **root);
-void getHull(Point input[],int n,Node **root);
+int computeHull(Point inp[],int n,Node **root);
+int getHull(Point input[],int n,Node **root);
 
 #endif

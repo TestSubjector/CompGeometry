@@ -1,52 +1,14 @@
-#include<iostream>
-#include<fstream>
-using namespace std;
-/// Data structure for representing a point in cartesian coordinates
-struct point
-{
-	double x_coord,y_coord;
-	point()
-	{
-		x_coord=0;
-		y_coord=0;
-	}
-};
-/// Function for taking input of set of points from file input.txt
-int inp(int N,point input[])
-{
-	ifstream myfile;
-	myfile.open("input.txt",ios::in);
-	if(myfile.is_open())
-		for(int i=0;i<N;i++)
-		{
-			if(myfile.eof())
-			{
-				cout<<"Invalid file."<<endl;
-				return 0;
-			}
-			else
-			{
-				myfile>>input[i].x_coord;
-				myfile>>input[i].y_coord;
-			}
-		}
-	else
-	{
-		cout<<"File not found."<<endl;
-		return 0;
-	}
-	myfile.close();
-	return 1;
-}
+#include "jmarch.h"
+
 /** Given 3 points p1, p2 and p3, function checks how p2-p3 is oriented wrt p1-p2
 	Returns 0 in case of no turn
 	Returns 1 in case of clockwise turn
 	Returns 2 in case of counterclockwise turn
 */
-int orient(point p1,point p2,point p3)
+int orient(Point p1,Point p2,Point p3)
 {
 	double det=0;
-	det=(p2.y_coord-p1.y_coord)*(p3.x_coord-p2.x_coord)-(p2.x_coord-p1.x_coord)*(p3.y_coord-p2.y_coord);
+	det=(p2.y-p1.y)*(p3.x-p2.x)-(p2.x-p1.x)*(p3.y-p2.y);
 	if(!det)
 	{
 		return 0;
@@ -61,22 +23,22 @@ int orient(point p1,point p2,point p3)
 	}
 }
 /// Computes the set of points which form the convex hull and returns the total number of such points.
-int hull_compute(point input[],int result[],int N)
+int hull_compute(Point input[],int result[],int N)
 {
 	int j=0;
-	double small1=input[0].x_coord,small2=input[0].y_coord;
+	double small1=input[0].x,small2=input[0].y;
 	int small_add=0;
 	for(int i=1;i<N;i++)
 	{
-		if(input[i].x_coord<small1)
+		if(input[i].x<small1)
 		{
-			small1=input[i].x_coord;
+			small1=input[i].x;
 			small_add=i;
 		}
-		else if(input[i].x_coord==small1)
-			if(input[i].y_coord<small2)
+		else if(input[i].x==small1)
+			if(input[i].y<small2)
 			{
-				small2=input[i].y_coord;
+				small2=input[i].y;
 				small_add=i;
 			}
 	}
@@ -95,42 +57,5 @@ int hull_compute(point input[],int result[],int N)
 			result[j++]=b;
 			a=b;
 	}
-	return j;
-}
-/// Prints the set of points which form the convex hull of the inputted set of points.
-void output(point input[],int N,int result[],int j)
-{
-	ofstream outputFile;
-	outputFile.open("output_jarvis.ch");
-	outputFile << "CH" <<endl;
-	outputFile << N << " " << j;
-	for(int i=0;i < N; i++)
-	{
-		outputFile << input[i].x_coord << " " << input[i].y_coord << " 0.0" << endl;
-	}
-	for(int i=0;i<j-1;i++)
-	{
-		outputFile<<result[i]<<" ";
-	}
-	outputFile << endl;
-	outputFile.close();
-}
-int main()
-{
-	int N,j=0;
-	cout<<"No. of points: ";
-	cin>>N;
-	if(N<3)
-	{
-		cout<<"Atleast 3 points."<<endl; /// Convex hull is not defined for 1 or 2 points.
-		return 0;
-	}
-	point input[N]; /// The array which stores the input points. Does not change after input is taken.
-	int result[N+1]; // Stores the addresses of points from input array
-	for(int i=0;i<N;i++)
-		result[i]=-1;
-	inp(N,input);
-	j=hull_compute(input,result,N); // No. of points on the hull
-	output(input,N,result,j);
-	return 0;
+	return j-1;
 }

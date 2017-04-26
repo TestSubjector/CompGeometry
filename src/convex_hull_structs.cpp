@@ -11,25 +11,9 @@ PolarPoint convertToPolar(Point p, Point origin)
   p.x -= origin.x;
   p.y -= origin.y;
   double r = sqrt(p.x*p.x + p.y*p.y);
-  if(r==0.0 || r==-0.0) return PolarPoint(0.0,0.0);
+  if(r==0.0 || r==-0.0) return PolarPoint(0.0,0.0,p.index);
   double theta = atan(p.y/p.x);
-  return PolarPoint(r,theta);
-}
-
-/**
- * Converts into cartesian and then shifts origin
- * @param  p      PolarPoint to be converted
- * @param  origin Origin in cartesian
- * @return        Point which is conversion of passed PolarPoint
- */
-Point converttoCartesian(PolarPoint p, Point origin)
-{
-  double x = p.r * cos(p.theta);
-  double y = p.r * sin(p.theta);
-  x += origin.x;
-  y += origin.y;
-
-  return Point(x,y);
+  return PolarPoint(r,theta,p.index);
 }
 
 /**

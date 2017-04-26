@@ -1,4 +1,5 @@
 #include "graham_scan.h"
+using namespace std;
 /**
 * Computes whether the next point is to the left or to the right or in the same direction.
  * @param  p The previous point
@@ -16,8 +17,9 @@ double nextDirection(Point p,Point q,Point r)
  * @brief Finds the leftmost point and then brings it to index 0.
  * @param p Array of Point objects
  * @param n length of the array
+ * @returns index of leftmost point
  */
-void swapLeftmostPoint(Point p[], int n)
+int getLeftmostPoint(Point p[], int n)
 {
   int index_ref = 0;
   for (int i = 1; i < n; i++)
@@ -28,7 +30,8 @@ void swapLeftmostPoint(Point p[], int n)
       if(p[i].y < p[index_ref].y){ index_ref = i;}
     }
   }
-  swap(0,index_ref,p);
+
+  return index_ref;
 }
 
 /**
@@ -95,18 +98,40 @@ void sortPoints(PolarPoint inp[], int n)
  * @param inp  Array of all points in cartesian form; sorted
  * @param n  length of the array
  * @param root pointer to the root node pointer of a stack
+ * @return     number of points on the hull
  */
-void computeHull(Point inp[],int n,Node **root)
+int computeHull(Point inp[],int n,Node **root)
 {
-  //Add the origin and next point to the Hull
-  push(inp[0],root);
-  push(inp[1],root);
-  for(int i = 2; i < n-1; i++ )
-  {
-    if(nextDirection( peek(root),inp[i],inp[i+1]) < 0) continue; //This means right turn. If collinear point not to be taken, make <=
-    else push(inp[i],root);
-  }
-  push(inp[n-1],root);
+    int size = 0;
+    //Add the origin and next point to the Hull
+    push(inp[0],root);
+    size++;
+    push(inp[1],root);
+    size++;
+    for(int i = 2; i < n-1; i++ )
+    {
+        cout << "(" << peek(root).x << " " << peek(root).y << ") ";
+        cout << "(" << inp[i].x << " " << inp[i].y << ") ";
+        cout << "(" << inp[i+1].x << " " << inp[i+1].y << ") ";
+        cout << nextDirection( peek(root),inp[i],inp[i+1]) << endl;
+        if(nextDirection( peek(root),inp[i],inp[i+1]) < 0) {
+            //This means right turn. If collinear point not to be taken, make <=
+            Point popped = pop(root);
+            while (nextDirection(popped,peek(root),inp[i+1]) >= 0) {
+                cout << "while: popped" <<endl;
+                popped = pop(root);
+            }
+            push(popped,root);
+        }
+        else {
+            push(inp[i],root);
+            cout << "pushed" << endl;
+            size++;
+        }
+    }
+    push(inp[n-1],root);
+    size++;
+    return size;
 }
 
 /**
@@ -114,11 +139,12 @@ void computeHull(Point inp[],int n,Node **root)
  * @param input  Input array of Points
  * @param len    length of array
  * @param root Stack root node to which vertices will be pushed
+ * @return      number of points on the hull
  */
-void getHull(Point input[],int len,Node **root)
+int getHull(Point input[],int len,Node **root)
 {
-  swapLeftmostPoint(input,len);
-  Point origin = input[0];
+  int ind = getLeftmostPoint(input,len);
+  Point origin = input[ind];
   PolarPoint* input_pol= new PolarPoint[len];
   for(int i = 0; i < len; i++)
   {
@@ -130,10 +156,13 @@ void getHull(Point input[],int len,Node **root)
   // printf("%s\n","Printing unsorted polar array" );
   // printArray(input_pol,len);
 
-  sortPoints(input_pol+1,len-1);
+  swap(0,ind,input_pol); //origin is now at index0 in input_pol
+  sortPoints(input_pol+1,len-1); // input_pol[1:]
   // printf("%s\n","Printing sorted polar array" );
   // printArray(input_pol,len);
-
+  for (int i = 0; i < len; i++) {
+      PolarPoint temp = input_pol[i];
+  }
   PolarPoint* intermediate_pol = new PolarPoint[len];
   int newlen=0;
   newlen = removeThetaCollinear(input_pol,len,intermediate_pol);
@@ -143,18 +172,18 @@ void getHull(Point input[],int len,Node **root)
   if(newlen < 3)
   {
     printf("%s\n", "Convex hull not possible");
-    return;
+    return -1;
   }
 
   Point* intermediate_cart = new Point[newlen];
   for(int i = 0; i < newlen; i++)
   {
-    intermediate_cart[i] = converttoCartesian(intermediate_pol[i],origin);
+    intermediate_cart[i] = input[intermediate_pol[i].index];
   }
   delete [] intermediate_pol;
 
   // printf("%s\n","Printing intermediate cart array");
   // printArray(intermediate_cart,newlen);
 
-  computeHull(intermediate_cart,newlen,root);
+  return computeHull(intermediate_cart,newlen,root);
 }

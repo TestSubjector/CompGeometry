@@ -10,7 +10,8 @@ struct PolarPoint
 {
   double r;
   double theta;
-  PolarPoint(double x, double y):r(x),theta(y){}
+  int index;
+  PolarPoint(double x, double y,int i):r(x),theta(y),index(i){}
   PolarPoint(){}
 };
 
@@ -19,6 +20,8 @@ struct Point
 {
   double x;
   double y;
+  int index;
+  Point(double x1, double y1, int ind) : x(x1), y(y1),index(ind){}
   Point(double x1, double y1) : x(x1), y(y1){}
   Point(){}
 };
@@ -31,7 +34,6 @@ struct Node
 };
 
 PolarPoint convertToPolar(Point p, Point origin);
-Point converttoCartesian(PolarPoint p, Point origin);
 int compareTheta(PolarPoint p, PolarPoint q);
 
 int isEmpty(Node* root);
