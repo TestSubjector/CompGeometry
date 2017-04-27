@@ -42,10 +42,9 @@ int main(int argc, char const *argv[]) {
   {
     getline(inputFile,lineinput);
     inp[i] = parsePoint(lineinput);
+    inp[i].index = i;
   }
   inputFile.close();
-
-  outputFile.open("output_triangulate.txt");
 
   list<Poly> list_inp;
   list_inp.push_back(inp);
@@ -58,14 +57,24 @@ int main(int argc, char const *argv[]) {
       cout << "Error: Unable to process" << endl;
   }
   else {
+      outputFile.open("output_triangulate.ply");
       int num_output = list_out.size();
-      outputFile << "Number of triangles: " << num_output << endl;
-      int i = 1;
+      outputFile << "ply" << endl;
+      outputFile << "format ascii 1.0" << endl;
+      outputFile << "element vertex " << len << endl;
+      outputFile << "property float x" << endl;
+      outputFile << "property float y" << endl;
+      outputFile << "property float z" << endl;
+      outputFile << "element face " << num_output << endl;
+      outputFile << "property list uchar int vertex_list" << endl;
+      outputFile << "end_header" << endl;
+      for (int i=0; i < len; i++) {
+          outputFile << inp[i].x << " " << inp[i].y << " " << 0.0 << endl;
+      }
       for (std::list<Poly>::iterator iter = list_out.begin(); iter != list_out.end(); iter++) {
-          outputFile << "Triangle " << i++ << endl;
           (*iter).printVert(outputFile);
       }
-      cout << "Output at ./output_triangulate.txt";
+      cout << "Output at ./output_triangulate.ply";
+      outputFile.close();
   }
-  outputFile.close();
 }

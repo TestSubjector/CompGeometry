@@ -12,6 +12,7 @@ using namespace std;
 struct Point {
 	double x;
 	double y;
+	int index;
 	Point(double x1, double y1) : x(x1), y(y1){}
     Point(){}
 };
@@ -65,8 +66,9 @@ public:
 	}
 
 	void printVert(ostream& outs) {
+		outs << numpoints << " ";
 		for(long i = 0; i < numpoints; i++) {
-			outs << "(" << points[i].x << ", " << points[i].y << ") ";
+			outs << points[i].index << " ";
 		}
 		outs << std::endl;
 	}

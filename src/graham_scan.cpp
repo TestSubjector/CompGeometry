@@ -117,11 +117,14 @@ int computeHull(Point inp[],int n,Node **root)
         if(nextDirection( peek(root),inp[i],inp[i+1]) < 0) {
             //This means right turn. If collinear point not to be taken, make <=
             Point popped = pop(root);
-            while (nextDirection(popped,peek(root),inp[i+1]) >= 0) {
+            size--;
+            while (nextDirection(popped,peek(root),inp[i+1]) >= 0 && !isEmpty(*root)) {
                 cout << "while: popped" <<endl;
                 popped = pop(root);
+                size--;
             }
             push(popped,root);
+            size++;
         }
         else {
             push(inp[i],root);

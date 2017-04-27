@@ -228,13 +228,13 @@ int Partition::MonotonePartition(list<Poly> *inpolys, list<Poly> *monotonePolys)
 		vprev = &(vertices[v->previous]);
 		vnext = &(vertices[v->next]);
 
-		if(Below(vprev->p,v->p)&&Below(vnext->p,v->p)) {
-			if(IsConvexAngle(vnext->p,vprev->p,v->p)) {
+		if(Below(vprev->p,v->p) && Below(vnext->p,v->p)) {
+			if(IsConvexAngle(v->p,vprev->p,vnext->p)) {
 				vertextypes[i] = VERTEXTYPE_START;
 			} else {
 				vertextypes[i] = VERTEXTYPE_SPLIT;
 			}
-		} else if(Below(v->p,vprev->p)&&Below(v->p,vnext->p)) {
+		} else if(Below(v->p,vprev->p) && Below(v->p,vnext->p)) {
 			if(IsConvexAngle(vnext->p,vprev->p,v->p))
 			{
 				vertextypes[i] = VERTEXTYPE_END;
@@ -301,6 +301,7 @@ int Partition::MonotonePartition(list<Poly> *inpolys, list<Poly> *monotonePolys)
 				newedge.p2 = v->p;
 				edgeIter = edgeTree.lower_bound(newedge);
 				if(edgeIter == edgeTree.begin()) {
+                    cout << "error in split vert" << endl;
 					error = true;
 					break;
 				}
@@ -347,6 +348,7 @@ int Partition::MonotonePartition(list<Poly> *inpolys, list<Poly> *monotonePolys)
 				newedge.p2 = v->p;
 				edgeIter = edgeTree.lower_bound(newedge);
 				if(edgeIter == edgeTree.begin()) {
+                    cout << "error in merge vert" << endl;
 					error = true;
 					break;
 				}
@@ -397,6 +399,7 @@ int Partition::MonotonePartition(list<Poly> *inpolys, list<Poly> *monotonePolys)
 					newedge.p2 = v->p;
 					edgeIter = edgeTree.lower_bound(newedge);
 					if(edgeIter == edgeTree.begin()) {
+                        cout << "error in regular vert" << endl;
 						error = true;
 						break;
 					}
@@ -640,9 +643,15 @@ int Partition::Triangulate_MONO(list<Poly> *inpolys, list<Poly> *triangles) {
 	list<Poly> monotone;
 	list<Poly>::iterator iter;
 
-	if(!MonotonePartition(inpolys,&monotone)) return 0;
+	if(!MonotonePartition(inpolys,&monotone)) {
+        cout << "MonotonePartition error" << endl;
+        return 0;
+    }
 	for(iter = monotone.begin(); iter!=monotone.end();iter++) {
-		if(!TriangulateMonotone(&(*iter),triangles)) return 0;
+		if(!TriangulateMonotone(&(*iter),triangles)) {
+            cout << "TriangulateMonotone error" << endl;
+            return 0;
+        }
 	}
 	return 1;
 }
@@ -651,7 +660,7 @@ int Partition::Triangulate_MONO(list<Poly> *inpolys, list<Poly> *triangles) {
  * Adds the polygon to a list and calls the other overloaded Triangulate_MONO method
  * @param  poly
  * @param  triangles
- * @return           
+ * @return
  */
 int Partition::Triangulate_MONO(Poly *poly, list<Poly> *triangles) {
 	list<Poly> polys;
