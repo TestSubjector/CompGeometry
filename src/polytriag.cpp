@@ -476,7 +476,7 @@ int Partition::MonotonePartition(list<Poly> *inpolys, list<Poly> *monotonePolys)
  * Triangulates the single monotone polygon passed and stores the triangles in the second parameter
  * @param  inPoly    input, a monotone polygon
  * @param  triangles result, a list of triangles
- * @return           1 ofr success, 0 for failure
+ * @return           1 for success, 0 for failure
  */
 int Partition::TriangulateMonotone(Poly *inPoly, list<Poly> *triangles) {
 	long i,i2,j,topindex,bottomindex,leftindex,rightindex,vindex;

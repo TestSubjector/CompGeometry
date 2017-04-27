@@ -84,7 +84,7 @@ public:
 };
 
 /**
- * Paritions represented by edges and vertices
+ * Partitions represented by edges and vertices
  */
 class Partition {
 protected:
