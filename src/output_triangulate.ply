@@ -1,0 +1,25 @@
+ply
+format ascii 1.0
+element vertex 16
+property float x
+property float y
+property float z
+element face 0
+property list uchar int vertex_list
+end_header
+3.474 19.696 0
+10.135 30.4125 0
+13.4957 22.4178 0
+23.3437 24.1548 0
+26.8177 43.8508 0
+35.7972 40.6638 0
+26.0655 34.1765 0
+24.3285 24.3285 0
+44.0245 27.8025 0
+37.3635 17.086 0
+34.0028 25.0807 0
+24.1548 23.3437 0
+20.6808 3.6477 0
+11.7013 6.8347 0
+21.433 13.322 0
+23.17 23.17 0

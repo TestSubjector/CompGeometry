@@ -1,0 +1,17 @@
+ply
+format ascii 1.0           { ascii/binary, format version number }
+comment made by Greg Turk  { comments keyword specified, like all lines }
+comment this file is a cube
+element vertex 5           { define "vertex" element, 8 of them in file }
+property float x           { vertex contains float "x" coordinate }
+property float y           { y coordinate is also a vertex property }
+property float z           { z coordinate, too }
+element face 1             { there are 6 "face" elements in the file }
+property list uchar int vertex_index { "vertex_indices" is a list of ints }
+end_header
+5 0 0
+10 0 0
+10 10 0
+5 5 0
+0 10 0
+5 0 1 2 3 4

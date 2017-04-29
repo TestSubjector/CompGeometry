@@ -17,17 +17,7 @@ struct Point {
     Point(){}
 };
 
-/// Struct that is a node in a stack
-struct Node
-{
-  long index;
-  Node* next;
-};
-
-int isEmpty(Node* root);
-void push(long i,Node** root);
-long pop(Node** root);
-long peek(Node** root);
+int equals(Point p1, Point p2);
 
 /**
  * Polygon represented as a collection of points
@@ -67,9 +57,12 @@ public:
 
 	void printVert(ostream& outs) {
 		outs << numpoints << " ";
+		// cout << "printVert " << numpoints << " ";
 		for(long i = 0; i < numpoints; i++) {
+			// cout << points[i].index << " ";
 			outs << points[i].index << " ";
 		}
+		// cout << endl;
 		outs << std::endl;
 	}
 
@@ -126,10 +119,10 @@ protected:
 	bool Below(Point &p1, Point &p2);
 	void AddDiagonal(MonotoneVertex *vertices, long *numvertices, long index1, long index2);
 
+public:
+
 	/// triangulates a monotone polygon, used in Triangulate_MONO
 	int TriangulateMonotone(Poly *inPoly, list<Poly> *triangles);
-
-public:
 
 	/// triangulates a polygons by firstly partitioning it into monotone polygons
 	/// time complexity: O(n*log(n)), n is the number of vertices
@@ -150,7 +143,7 @@ public:
 	///             vertices of all hole polys have to be in clockwise order
 	///   triangles : a list of triangles (result)
 	/// returns 1 on success, 0 on failure
-int Triangulate_MONO(list<Poly> *inpolys, list<Poly> *triangles);
+	int Triangulate_MONO(list<Poly> *inpolys, list<Poly> *triangles);
 
 	/// creates a monotone partition of a list of polygons that can contain holes
 	/// time complexity: O(n*log(n)), n is the number of vertices

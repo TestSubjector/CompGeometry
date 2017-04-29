@@ -35,25 +35,37 @@ int main(int argc, char const *argv[]) {
       len = atoi(lineinput.c_str());
   }
 
-  Poly inp = Poly();
-  inp.Init(len);
-
+  Point* input_unsorted = new Point[len];
   for(int i = 0; i < len; i++)
   {
     getline(inputFile,lineinput);
-    inp[i] = parsePoint(lineinput);
-    inp[i].index = i;
+    input_unsorted[i] = parsePoint(lineinput);
+    input_unsorted[i].index = i;
   }
   inputFile.close();
+
+  Poly inp = Poly();
+  inp.Init(len);
+  for(int i = 0; i < len; i++)
+  {
+    inp[i] = input_unsorted[i];
+  }
 
   list<Poly> list_inp;
   list_inp.push_back(inp);
 
   list<Poly> list_out;
 
-  int success = Partition().Triangulate_MONO(&list_inp, &list_out);
+  // cout << "success " << Partition().MonotonePartition(&list_inp,&list_out) << endl;
+  // for(std::list<Poly>::iterator iter = list_inp.begin(); iter!=list_inp.end();iter++) {
+  //     if(!Partition().TriangulateMonotone(&(*iter),&list_out)) {
+  //         cout << "TriangulateMonotone error" << endl;
+  //     }
+  // }
+  cout << Partition().Triangulate_MONO(&list_inp, &list_out) << endl;
+  // cout << Partition().TriangulateMonotone(&inp,&list_out) << endl;
 
-  if (success != 1) {
+  if (0) {
       cout << "Error: Unable to process" << endl;
   }
   else {

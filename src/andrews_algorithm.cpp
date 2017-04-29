@@ -72,6 +72,7 @@ void Duplicate(Point T[], Point U[])
         {
             T[I].x = U[I].x;
             T[I].y = U[I].y;
+            T[I].index = U[I].index;
         }
 }
 
