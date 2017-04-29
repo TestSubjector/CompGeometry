@@ -9,10 +9,6 @@
 Test Cases</h3>
 
 <h4>Case #1</h4>
-
-
-
-
 <pre>
 <strong>8</strong>
 5 0
@@ -33,9 +29,9 @@ Test Cases</h3>
 
 <a href="https://ibb.co/dZQUrQ"><img src="https://preview.ibb.co/mHOFWQ/case2_after.png" alt="case2_after" border="0"></a>
 
+<hr width=50% align='left'/>
+
 <h4>Case #2</h4>
-
-
 
 <pre>
 <strong>6</strong>
@@ -56,3 +52,16 @@ Test Cases</h3>
 
 <a href="https://ibb.co/mMiokk"><img src="https://preview.ibb.co/hUEuQk/case3_after.png" alt="case3_after" border="0"></a>
 
+<h3>Closing Comments</h3>
+
+<h4>Make_Monotone</h4>
+This routine of our implementation has remained unusable despite multiple efforts to debug. The essential error was tracked down to insertion of helper/deletion of edge operations for certain vertices.<br/>
+We were unable to determine the exact conditions under which the error definitely shows, but it seems that polygons with a lesser number of split/merge vertices are getting monotonized properly.<br/>
+<h4>Triangulate_Monotone</h4>
+This routine takes in a list of polygons which are assumed to be monotone and proceeds to triangulate them.<br/>
+<u><strong>Degeneracies:</u></strong><br/>
+Floating point error can cause some unexpected results.<br/>
+<u><strong>Complexity:</u></strong><br/>
+The triangulation of a monotone polygon is achieved in linear time. The algorithm used is to make a priority queue based on y-coordinates and then adding diagonals while traversing down the chains.<br/>
+<u><strong>Robustness:</u></strong><br/>
+Since this method depends on the monotone nature of passed input, the first step is to check whether the polygon is really monotone. Only after verification does the rest of the algorithm proceed. <br/>
