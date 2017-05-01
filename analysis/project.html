@@ -1,0 +1,31 @@
+<h1>Project</h1>
+<h3>Given a set of n disjoint segments and a point that does not lie on any of them, find the number of visible segments.</h3>
+The definition of a visible segment is that if any point q lying on a segment S is visible, then the segment S is visible.
+
+<h3> Test Cases </h3>
+
+<h4>Case #1</h4>
+<pre>
+<strong>3</strong>
+15 15	(The coord of camera point)
+0 0 15 20 (space seperated coords of the endpoints of a segment)
+5 5 40 5
+30 7 12 40
+</pre> <br/>
+
+<a href="https://ibb.co/jeTdkk"><img src="https://preview.ibb.co/dcoNBQ/Capture.png" alt="Capture" border="0"></a> <br/>
+
+<hr width=50% align='left'>
+
+<h3>Closing Comments</h3>
+
+<h4>Sorting the points by polar coordinate</h4>
+The endpoints of the segments are converted into polar coordinates and then arranged in order of increasing theta. This operation can be done in <code> O(n log n)</code> time<br/>
+<h4>Looping over the event points</h4>
+Based on the order obtained from the sort, we go over the end points one at a time. At each end point, an active list of segments is maintained. At the starting of a segment, it is added into the list, and at the ending, it is removed from the list.<br/>
+The segment being added/removed is also checked against the other members of the active list to determine if it is visible. This takes <code>O(n)</code> time. If it is visible, it is added to the visibilty list. <br/>
+
+<u><strong>Degeneracies:</u></strong><br/>
+In the case that the camera point and the end point of one segment and the start point of another segment are collinear, both vertices are considered to be visible. Since in such a situation the edges are definitely visible, it doesn't cause a difference if we let the vertex remain visible.<br/>
+<u><strong>Complexity:</u></strong><br/>
+Insertion operations while looping over n elements are <code>O(1)</code>. Hence, the overall complexity will be <code>O(n)</code>. <br/>

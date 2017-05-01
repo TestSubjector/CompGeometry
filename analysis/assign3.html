@@ -1,0 +1,74 @@
+<h1>Assignment 3</h1>
+<h3>Triangulate a set of n points on a 2D plane</h3>
+<ul>
+	<li>Construct convex hull</li>
+	<li>Triangulate the convex hull</li>
+	<li>Insert internal points one by one while updating the list of triangles</li>
+</ul>
+
+<h3> Test Cases </h3>
+
+<h4>Case #1</h4>
+<pre>
+<strong>16</strong>
+3.474000 19.696000 0.000000
+10.135000 30.412500 0.000000
+13.495700 22.417800 0.000000
+23.343700 24.154800 0.000000
+26.817700 43.850800 0.000000
+35.797200 40.663800 0.000000
+26.065500 34.176500 0.000000
+24.328500 24.328500 0.000000
+44.024500 27.802500 0.000000
+37.363500 17.086000 0.000000
+34.002800 25.080700 0.000000
+24.154800 23.343700 0.000000
+20.680800 3.647700 0.000000
+11.701300 6.834700 0.000000
+21.433000 13.322000 0.000000
+23.170000 23.170000 0.000000
+</pre> <br/>
+<a href="https://ibb.co/cchqWQ"><img src="https://preview.ibb.co/dQiKQk/case2ply.png" alt="case2ply" border="0" /></a> <br/>
+
+<hr width=50% align='left'>
+
+<h4>Case #2</h4>
+
+<pre>
+<strong>6</strong>
+0 0 0
+10 0 0
+10 20 0
+0 20 0
+5 5 0
+5 10 0
+</pre> <br/>
+<a href="https://ibb.co/dzFYkk"><img src="https://preview.ibb.co/eXr65k/case_custom.png" alt="case custom" border="0" /></a> <br/>
+
+<h4>Special Testcase</h4>
+
+The data for this case consists of <strong>5000</strong> points and a copy can be found in the analysis folder as <code>specialcase.txt</code> <br/>
+This case took approximately <strong>47 seconds</strong> to completely triangulate. <br/>
+
+Convex hull has been computed and triangulated: <br/>
+<a href="https://ibb.co/k5B65k"><img src="https://preview.ibb.co/d1o8J5/case_keyur_simple_triang.png" alt="case keyur simple triang" border="0" /></a> <br/>
+
+Complete triangulation of points: <br/>
+<a href="https://ibb.co/hzEhd5"><img src="https://preview.ibb.co/itER5k/case_keyur_after.png" alt="case keyur after" border="0" /></a> <br/>
+
+<h3>Closing Comments</h3>
+
+<h4>Computing the convex hull</h4>
+The hull is computed using Andrew's Algorithm by default, and imports the code from assignment 1 in order to achieve this. The constructor can be made to accept an int as an optional parameter based on which <br/>
+the specific algorithm to be used can be decided from among Andrew's, Graham's and Jarvis. <br/>
+<h4>Triangulating the Hull</h4>
+By the very definition of a convex hull, it must ALWAYS be a monotone polygon. Thus, our previous issues with triangulating a polygon don't bother us here. <br/>
+<h4>Insertion of points</h4>
+The (i+1)th point being inserted iterates over <code>2*i - points_on_hull - 2 </code> points in the worst case. Once the containing triangle is found, there are 3 additions and one deletion from our list of polygons. Each of these operations are constant time<br/>
+The final triangulation varies based on the order of points in the input since they are not sorted before looping. <br/> <br/>
+<u><strong>Degeneracies:</u></strong><br/>
+Points on the edge of triangles lie in two triangles. The current code has a break statement and doesn't connect the vertex in the other triangle. This means that the triangle to which it connects is chosen by the order of input.<br/>
+<u><strong>Complexity:</u></strong><br/>
+The first two steps are <code> O(n log n) </code> but the final step with <code> O(n^2) </code> decides the overall complexity. <br/>
+<u><strong>Robustness:</u></strong><br/>
+The convex hull computed is always monotone, so the only issues of robustness occur in the 3rd subroutine. <br/>
