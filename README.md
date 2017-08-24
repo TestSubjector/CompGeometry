@@ -1,5 +1,5 @@
 # SelTopicsRepository
-A Place To Store All Files Related To The Course CS-F441
+The Computational Geometry work related to the BITS Course CS-F441 [Selected Topics in CS]
 
 ## Instructions for the visualizer
 The Visualizer is written in Python 2.7.13 and uses matplotlib as a dependency. So make sure both of these are on your system.
